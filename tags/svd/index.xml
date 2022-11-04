@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SVD on ML notes</title>
+    <link>/tags/svd/</link>
+    <description>Recent content in SVD on ML notes</description>
+    
+    <language>en-us</language>
+    <lastBuildDate>Sat, 01 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/svd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SVD refresher</title>
+      <link>/blog/en/svd/</link>
+      <pubDate>Sat, 01 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/en/svd/</guid>
+      <description>Singular Value Decomposition (SVD) Data-driven generalization of the Fourier Fransform.
+Singular Value Decomposition - Steve Brunton Barry Van Veen: The Singular Value Decomposition - Barry Van Veen 7. Eckart-Young: The Closest Rank k Matrix to A - Gilbert Strang CS168: The Modern Algorithmic Toolbox One of the most well used, general purpose tool in numerical linear algebra for data processing. We can use SVD as a data dimensionality reduction tool. SVD allows us to reduce high dimensional data (e.</description>
+    </item>
+    
+  </channel>
+</rss>

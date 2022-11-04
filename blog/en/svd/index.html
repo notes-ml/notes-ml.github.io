@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en-us">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title> SVD refresher - ML notes </title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="" />
+    <meta property="og:site_name" content="ML notes" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="/blog/en/svd/" />
+    <meta property="og:title" content="SVD refresher" />
+    <meta property="og:image" content="/" />
+    <meta property="og:description" content="" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <meta name="twitter:title" content="SVD refresher" />
+    <meta name="twitter:description" content="" />
+    
+
+    <meta name="twitter:image" content="/" />
+    <link rel="canonical" href="/blog/en/svd/">
+    <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="/css/custom.css" />
+    
+    
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="ML notes" />
+    
+  </head>
+
+  <body>
+    
+<div class="mt-xl header">
+  <header>
+    <div class="container">
+      <div class="row justify-content-center">
+	<div class="col-auto">
+	  <a href="/" style="display: contents">
+	    <h1 class="name text-center">ML notes</h1>
+	  </a>
+	</div>
+      </div>
+      <div class="row justify-content-center">
+	<section class="nav  justify-content-center">
+	  <ul>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="/">
+		
+		Home
+	      </a>
+	    </li>
+	    
+	    <li class="nav-item justify-content-center mx-auto"> 
+	      <a class="nav-link" href="cv.pdf">
+		
+		About
+	      </a>
+	    </li>
+	    
+	    
+	  </ul>
+	</section>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 col-lg-8">
+	<h1 class="mx-0 mx-md-4 blog-post-title">SVD refresher</h1>
+	<div class="meta-data meta">
+	  
+	  <div class="d-none d-md-inline meta-brief">
+	    SVD learning resources.
+	  </div>
+	  
+	  
+	  
+	  <span class="author meta-data" title="Patricio A.">
+	    Patricio A.
+	  </span>
+	  
+	  
+	  <span class="date middot meta-data" title='Sat Oct 1 2022 00:00:00 UTC'>
+	    2022-10-01
+	  </span>
+	  <span class="reading-time middot meta-data">
+	    6 min read
+	  </span>
+	  
+	  <a class="middot meta-data" href="/blog/en/svd/">Permalink</a>
+	  <div class="d-none d-md-inline tags">
+	    <ul class="list-unstyled d-inline">
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/learning">
+		  #learning
+		</a>
+	      </li>
+	      
+	      <li class="d-inline" style="margin-right: 0.5rem">
+		<a href="/tags/svd">
+		  #SVD
+		</a>
+	      </li>
+	      
+	    </ul>
+	  </div>
+	</div>
+	<div class="markdown blog-post-content">
+	  <h1 id="singular-value-decomposition-svd">Singular Value Decomposition (SVD)</h1>
+<p><em>Data-driven generalization of the Fourier Fransform.</em></p>
+<ul>
+<li><a href="https://www.youtube.com/playlist?list=PLMrJAkhIeNNSVjnsviglFoY2nXildDCcv">Singular Value Decomposition - Steve Brunton</a></li>
+<li><a href="https://www.youtube.com/watch?v=9U3jx8fEDSA">Barry Van Veen: The Singular Value Decomposition - Barry Van Veen</a></li>
+<li><a href="https://www.youtube.com/watch?v=Y4f7K9XF04k">7. Eckart-Young: The Closest Rank k Matrix to A - Gilbert Strang</a></li>
+<li><a href="https://web.stanford.edu/class/cs168/l/l9.pdf">CS168: The Modern Algorithmic Toolbox</a></li>
+</ul>
+<p>One of the most well used, general purpose tool in numerical linear algebra for data processing. We can use SVD as a <em>data dimensionality reduction</em> tool. SVD allows us to reduce high dimensional data (e.g. megapixel images) into the key features (correlation) that are necessary for analyzing and describing this data.</p>
+<p>We can use SVD to solve a matrix system of equations (linear regression models). For example, I have health data for a bunch of patients, we can build a model of how different risk factors map to some disease, we can build the best fit model \(x\) given data \(A\) and \(B\) using least squares linear regression.</p>
+<p>SVD is present in:</p>
+<ul>
+<li>image compression / matrix approximation</li>
+<li>recommender system, the Netflix Prize</li>
+<li>linear regression</li>
+<li>PCA (principal component analyzis)</li>
+<li>Google page rank algorithm</li>
+<li>facial recognition algorithm</li>
+</ul>
+<p>The SVD allows us to <em>tailor</em> a coordinate system (transformation) based on the data that we have to our specific problem.</p>
+<blockquote>
+<p>matrix decomposition based on simple linear algebra, interpretable features and it&rsquo;s scalable</p>
+</blockquote>
+<h2 id="mathematical-overview">Mathematical Overview</h2>
+<p><em>hierarchically organized features based on the singular values</em></p>
+<p><img src="/img/0c356782.png" alt=""></p>
+<ul>
+<li>each column of \(X\) has a face vector \(x_k \in \mathbb{R}^n\)
+<ul>
+<li>\(n\) is the dimension of our face measurement</li>
+</ul>
+</li>
+<li>we have \(M\) columns, i.e. different people</li>
+</ul>
+<p>SVD allows us to take this matrix \(X\) and decompose/represent it as the product of three other matrices: \(U \Sigma V^T\)
+<img src="/img/2d2ba85a.png" alt=""></p>
+<ul>
+<li>\(U\) and \(V\) are unitary orthogonal matrices: \(U U^T = U^T U = \mathbb{I}_ {n \times n}\), same with \(V V^T = V^T V = \mathbb{I}_ {m \times m}\)
+<ul>
+<li>the columns are orthonormal -all orthogonal and have unit length-</li>
+</ul>
+</li>
+<li><em>eigen-faces</em> or a column \(U_k\) have the same shape/size as a column of \(X_k\)
+<ul>
+<li>values of \(u\) are hierarchically arranged according to their ability to describe the variance of the columns of \(X\), the faces</li>
+</ul>
+</li>
+<li>\(\Sigma\) is a diagonal matrix
+<ul>
+<li>non-negative and hierarchically ordered (decreasing magnitude): \(\sigma_{m-1} \geq \sigma_m \geq 0\)</li>
+<li>only \(m\) singular values, the rest is zero</li>
+</ul>
+</li>
+<li>\(V_k^T\) column tells us the required mixture of \(u\)&rsquo;s to make \(x\)&rsquo;s, scaled by the singular value \(\sigma_k\)
+<ul>
+<li>the first column \(V_1^T\) makes the first column \(X_1\)</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>interpret \(U\) and \(V\) as eigenvectors of correlation matrices between the rows and columns of \(X\)</p>
+</blockquote>
+<p>We call:</p>
+<ul>
+<li>\(U\) the left singular vector</li>
+<li>\(\Sigma\) matrix of singular <em>values</em></li>
+<li>\(V\) the right singular vector</li>
+</ul>
+<p>Because of the first columns of \(U\), \(\Sigma\) and \(V\) are more important in describing the information of the data matrix \(X\), we can ignore really small singular values \(\sigma\) and approximate the matrix \(X\) only in terms of the first dominant columns of \(U\), \(V\) and \(\Sigma\).</p>
+<blockquote>
+<p>Guaranteed to exist and unique</p>
+</blockquote>
+<h2 id="matrix-approximation">Matrix Approximation</h2>
+<p><em>approximate data matrix X in terms of a lower rank truncated SVD</em></p>
+<p><img src="/img/1f1958d9.png" alt="">
+Take a data matrix \(X\) and write it as the product of three matrices: \(U, \Sigma, V^T\):</p>
+<ul>
+<li>\(X_{n \times m}\) data matrix at most rank \(M\) due to the columns
+<ul>
+<li>\(n \gg m\): tall and skinny, e.g. 1_000_000 pixels per column vs 100 people</li>
+</ul>
+</li>
+<li>\(U_{n \times n}\) contains information about the <strong>column</strong> space of \(X\)
+<ul>
+<li>there are only \(M\) nonzero singular values \(\sigma\)</li>
+</ul>
+</li>
+<li>\(\Sigma_{n \times m}\) weigthing factor of importantance (diagonal matrix)</li>
+<li>\(V^T_{m \times m}\) contains information about the <strong>row</strong> space of \(X\)</li>
+</ul>
+<blockquote>
+<p>Hierarchically arranged</p>
+</blockquote>
+<p>We can just select as <em>the economy/skinny SVD</em>, i.e. select the non-zero singular values:
+<img src="/img/fb0bba29.png" alt=""></p>
+<ul>
+<li>the first \(M\) columns of \(U\) as \(\hat{U}\)</li>
+<li>the first \(M \times M\) block in \(\Sigma\) as \(\hat{\Sigma}\) of nonzero singular values</li>
+</ul>
+<p>SVD decomposes the data matrix \(X\) into orthogonal matrices \(U\) and \(V\) that we can rewrite as a sum of these rank one matrices, that increasingly improve the approximation of \(X\). Therefore, we can truncate the summation at rank \(R\), i.e. keep the first \(R\) columns of \(U\), the \(R \times R\) block of \(\Sigma\) and the first \(R\) rows of \(V^T\).
+<img src="/img/737c7d8a.png" alt=""></p>
+<p>After truncation:
+<img src="/img/f353dffd.png" alt=""></p>
+<ul>
+<li>\(\tilde{U}^T \tilde{U}\) is a \(R \times R\) identity matrix, still orthogonal</li>
+<li>\(\tilde{U} \tilde{U}^T\) no longer the identity matrix after truncation</li>
+</ul>
+<blockquote>
+<p>SVD gives the best low-rank approximation. This is a rank \(R\) approximation of \(X\), i.e. linearly independent columns and rows. <em>Eckart-Young theorem</em></p>
+</blockquote>
+<h2 id="dominant-correlations">Dominant Correlations</h2>
+<p><em>between the rows/columns of X</em></p>
+<p>\(U\) and \(V\) matrices as eigenvectors of a <em>correlation matrix</em> given by \(X^T X\), every enty is essentially an inner product between two columns of the data matrix \(X\), e.g. correlation between people faces, large value means similar, small means orthogonal different faces:
+<img src="/img/6a4d8aa3.png" alt=""></p>
+<blockquote>
+<p>symmetric and positive semi-definite (these are inner products) guarantee to have non negative real eigenvalues that have a direct correspondence on the singular values \(\Sigma\)</p>
+</blockquote>
+<p>The eigenvalue decomposition of the correlation matrix, assuming the <em>economy SVD</em>:
+<img src="/img/efdc31ce.png" alt=""></p>
+<ul>
+<li>\(V\): the columns are <em>eigenvectors</em> of the <strong>column wise</strong> correlation matrix \(X^T X_{m \times m}\)</li>
+<li>\(U\): the columns are <em>eigenvectors</em> of the <strong>row wise</strong> correlation matrix \(X X^T_{n \times n}\)</li>
+<li>\(\Sigma\): square roots of the <em>eigenvalues</em> of the column/row wise correlation matrix</li>
+</ul>
+<blockquote>
+<p>sorted hierarchically by importantance quantifid by the eigenvalues \(\Sigma^2\)</p>
+</blockquote>
+<h2 id="methods">Methods</h2>
+<p><img src="/img/7e54bda9.png" alt=""></p>
+<h2 id="matrix-completion-and-the-netflix-prize">Matrix Completion and the Netflix Prize</h2>
+<p>Very sparse, i.e. values are missing:
+<img src="/img/272f4011.png" alt=""></p>
+<ul>
+<li>column: all movie preferences for a person</li>
+<li>rows: different movie</li>
+</ul>
+<blockquote>
+<p>we can use correlations among the columns (people) and correlation among the rows (movies) to discover movie preferences for a given user.</p>
+</blockquote>
+<h2 id="unitary-transformations">Unitary Transformations</h2>
+<p><em>preserve angles and legnths of vectors</em></p>
+<p>Unitary Transformations just rotate our vector space so lengths and angles are preserved.
+<img src="/img/44567cb6.png" alt=""></p>
+<blockquote>
+<p>just rotate vectors together</p>
+</blockquote>
+<h2 id="randomized-singular-value-decomposition">Randomized Singular Value Decomposition</h2>
+<p><em>faster efficient SVD for a large data matrix X if we believe it has low intrinsic rank</em></p>
+<p>Computing the SVD of a big matrix \(X\) is very expensive but if we believe that there&rsquo;s a low rank \(r\) structure in there, we can get away with massive reduction computation by first sampling the column space of \(X\) using a a random projection matrix \(P\), then find an orthonormal representation using the QR factorization:</p>
+<ol>
+<li>compute a random projection \(P\) to multiply with the column space of \(X\) as \(Z = X P\)
+<ul>
+<li>\(P \in \mathbb{R}^{m \times r}\), \(r\) is the target rank</li>
+<li>QR factorization as \(Z = Q R\)</li>
+<li>\(Q\) orthonormal basis for \(Z\) and \(X\)</li>
+</ul>
+</li>
+<li>project \(X\) into that low dimensiona subspace \(Q\) as \(Y = Q^T X\), then compute the SVD
+<ul>
+<li>\(Y = U_r \Sigma V^T\)</li>
+<li>\(\Sigma V^T\) are the same as the SVD of the original data matrix \(X\)</li>
+<li>compute \(U_x = Q U_y\)</li>
+</ul>
+</li>
+</ol>
+<p><img src="/img/58f05b7e.png" alt=""></p>
+<ul>
+<li>oversampling to add more dimensions to \(P\), e.g. \(r + 10\)</li>
+<li>power iterations help when the singular values don&rsquo;t decay rapidly</li>
+</ul>
+<p>Same accurate and efficient representation of the data but in much less computational time.</p>
+<blockquote>
+<p>For larger and/or higher dimensionality datasets there still exists a <em>low intrinsic rank</em>, i.e. key features in the data that actually matter.</p>
+</blockquote>
+
+
+	</div>
+	
+      </div>
+      
+
+  
+  
+
+
+
+<div class="container">
+  <span class="row justify-content-center meta" id="footer">
+    Copyright ©
+    
+      2022
+      
+    Patricio A.
+  </span>
+  <script defer src="/js/custom.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js"></script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "\\[", right: "\\]", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false}
+            ]            
+        });
+    });
+</script>
+
+</div>
+
+    </div>
+  </div>
+</div>
+
+  </body>
+
+</html>
